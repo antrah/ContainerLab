@@ -1,0 +1,13 @@
+fileid=116649
+
+File Name	Check_Point_R81.10_Cloudguard_Openstack_Security_Management_unsecured.qcow2
+Product	CloudGuard Network, vSEC Virtual Edition (VE)
+Version	R81
+Minor Version	R81.10
+OS	Gaia
+Build Number	
+MD5	b83ac7180590e3a438d8026887ec4a55
+SHA1	0285eda14c0571dda53f3f8caa21de7ceb52c30d
+SHA256	f736875fb7d362bd2befab2e3c1e1b653889cd6f26d20db8a9917e183b7ea372
+Size	5807.5 MB
+Date Published	2021-07-19

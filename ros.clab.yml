@@ -1,0 +1,63 @@
+    #./containerlab.good destroy --cleanup --all
+    #./containerlab.good deploy --timeout 5m0s
+    #./containerlab.good inspect
+    # docker exec -it checkpoint-lab-checkpoint-cloudguard tail -f /console.log
+    #ssh admin@checkpoint-lab-checkpoint-cloudguard
+
+name: lab
+prefix: ""
+
+mgmt:
+  network: statics
+  ipv4_subnet: 172.20.20.0/24
+
+topology:
+  kinds:
+    vr-ros:
+    # https://hub.docker.com/r/iparchitechs/chr
+      image: iparchitechs/chr:long-term # :7.5beta8 :long-term
+
+  nodes:
+    ubuntu:
+      kind: linux
+      image: ubuntu:latest
+      memory: 256MB
+      cpu: 0.5
+      mgmt_ipv4: 172.20.20.21
+      binds:
+        - setup_ubuntu.sh:/tmp/setup.sh
+      exec:
+        - bash /tmp/setup.sh
+        - ip addr add dev eth1 10.2.2.21/24
+        - ip route add 10.2.0.0/16 via 10.2.2.1
+
+    alpine1:
+      kind: linux
+      image: alpine:latest
+      memory: 64MB
+      cpu: 0.5
+      mgmt_ipv4: 172.20.20.31
+      binds:
+        - setup_alpine.sh:/tmp/setup.sh
+      exec:
+        - sh /tmp/setup.sh
+        - ip addr add dev eth1 10.2.3.31/24
+        - ip route add 10.2.0.0/16 via 10.2.3.1
+
+    ros1:
+      kind: vr-ros
+      mgmt_ipv4: 172.20.20.11
+      memory: 512MB
+      cpu: 1
+      ports:
+        - 10122:22
+        - 10180:80
+#      startup-config: ros1.cfg
+      binds:
+        - setup_mikrotik.sh:/tmp/setup.sh
+      exec:
+        - sh /tmp/setup.sh 192.168.122.1 10.2.2 10.2.3
+
+  links:
+    - endpoints: ["ubuntu:eth1","ros1:eth1"]
+    - endpoints: ["ros1:eth2","alpine1:eth1"]

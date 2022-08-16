@@ -1,0 +1,37 @@
+$ BOXEN_LOG_LEVEL=debug BOXEN_TIMEOUT_MULTIPLIER=2 BOXEN_DEV_MODE=1 boxen package --disk /home/antonr/clab/qcow2/Check_Point_R81.10_Cloudguard_Openstack_Security_Gateway_unsecured.qcow2 --vendor checkpoint --platform cloudguard --version R81.10
+
+      info   1660487611 package requested for disk '/home/antonr/clab/qcow2/Check_Point_R81.10_Cloudguard_Openstack_Security_Gateway_unsecured.qcow2'
+     debug   1660487611 temporary directory '/tmp/boxen2960463246' created successfully
+     debug   1660487622 disks allocated for packaging
+     debug   1660487622 packaging instance created
+     debug   1660487622 bundling required packaging files complete
+      info   1660487622 boxen dev mode enabled, not deleting temporary directory after installation
+     debug   1660487622 pre packaging complete, begin docker-ization!
+      info   1660487622 docker build output available at '/tmp/boxen2960463246/initial_build.log'
+     debug   1660487783 base image building complete!
+     debug   1660487784 package install starting
+     debug   1660487784 begin instance install
+      info   1660487784 install requested
+      info   1660487784 qemu instance start requested
+     debug   1660487784 launching instance with command: [-name checkpoint_cloudguard -uuid 6d87f6e5-9910-4b1a-abd2-645b93b5fc37 -accel kvm -display none -machine pc -m 8192 -cpu host -smp 4 -monitor tcp:0.0.0.0:4001,server,nowait -serial telnet:0.0.0.0:5001,server,nowait -drive if=ide,file=disk.qcow2,format=qcow2 -device pci-bridge,chassis_nr=1,id=pci.1 -device virtio-net-pci,netdev=mgmt -netdev user,id=mgmt,net=10.0.0.0/24,tftp=/tftpboot,hostfwd=tcp::48000-10.0.0.15:22,hostfwd=tcp::48001-10.0.0.15:23,hostfwd=tcp::48002-10.0.0.15:257,hostfwd=tcp::48003-10.0.0.15:443,hostfwd=tcp::48004-10.0.0.15:830,hostfwd=tcp::48005-10.0.0.15:4434,hostfwd=tcp::48006-10.0.0.15:8211,hostfwd=tcp::48007-10.0.0.15:18190,hostfwd=tcp::48008-10.0.0.15:18191,hostfwd=tcp::48009-10.0.0.15:18192,hostfwd=tcp::48010-10.0.0.15:18210,hostfwd=tcp::48011-10.0.0.15:18211,hostfwd=tcp::48012-10.0.0.15:18221,hostfwd=tcp::48013-10.0.0.15:18264,hostfwd=tcp::48014-10.0.0.15:19009,hostfwd=udp::48015-10.0.0.15:161 -device virtio-net-pci,netdev=p001,bus=pci.1,addr=0x2,mac=52:54:00:cc:8d:01 -netdev socket,id=p001,listen=:10001 -device virtio-net-pci,netdev=p002,bus=pci.1,addr=0x3,mac=52:54:00:59:06:02 -netdev socket,id=p002,listen=:10002 -device virtio-net-pci,netdev=p003,bus=pci.1,addr=0x4,mac=52:54:00:39:49:03 -netdev socket,id=p003,listen=:10003 -device virtio-net-pci,netdev=p004,bus=pci.1,addr=0x5,mac=52:54:00:c8:21:04 -netdev socket,id=p004,listen=:10004 -device virtio-net-pci,netdev=p005,bus=pci.1,addr=0x6,mac=52:54:00:4a:e3:05 -netdev socket,id=p005,listen=:10005 -device virtio-net-pci,netdev=p006,bus=pci.1,addr=0x7,mac=52:54:00:3a:a1:06 -netdev socket,id=p006,listen=:10006 -device virtio-net-pci,netdev=p007,bus=pci.1,addr=0x8,mac=52:54:00:bd:3f:07 -netdev socket,id=p007,listen=:10007 -device virtio-net-pci,netdev=p008,bus=pci.1,addr=0x9,mac=52:54:00:8d:9c:08 -netdev socket,id=p008,listen=:10008]
+     debug   1660487784 stdout logger provided, setting execute argument
+     debug   1660487784 stderr logger provided, setting execute argument
+      info   1660487794 qemu instance start complete
+     debug   1660487794 instance started, waiting for start ready state
+      info   1660487803 install logs available at '/tmp/boxen2960463246/install_build.log', or by inspect container '204a7a7d14e5df09f9df2075b15439847bc1de9b69653ce8ab5c62ca062f3a05' logs
+     debug   1660488733 start ready state acquired, logging in
+     debug   1660488752 encountered too many consecutive empty reads, sending return...
+     debug   1660488753 found login prompt sending username admin
+     debug   1660488754 found password prompt sending password admin
+      info   1660488755 found device prompt, done handling login
+     debug   1660488755 log in complete
+     debug   1660488755 install config lines provided, executing scrapligo on open
+     debug   1660488756 initial installation complete
+      info   1660488756 save config requested
+      info   1660488761 install complete, stopping instance
+      info   1660488761 qemu instance stop requested
+      info   1660488761 qemu instance stop complete
+     debug   1660488779 instance installation complete!
+      info   1660488865 final image build logs available at '/tmp/boxen2960463246/final_build.log'
+     debug   1660488865 packaging complete!
+        ✅ finished successfully in 1254 seconds

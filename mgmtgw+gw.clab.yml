@@ -1,0 +1,85 @@
+    #./containerlab.good destroy --cleanup --all
+    #./containerlab.good deploy --timeout 5m0s
+    #./containerlab.good inspect
+    # docker exec -it cp-cloudguard_mgmt tail -f /console.log
+    # ssh admin@cp-cloudguard_gw
+
+name: cp
+prefix: ""
+
+mgmt:
+  network: statics
+  ipv4_subnet: 172.20.20.0/24
+  ipv6_subnet: "2001:172:20:20::/64"
+
+topology:
+  nodes:
+    ubuntu:
+      kind: linux
+      image: ubuntu:latest
+      memory: 256MB
+      cpu: 0.5
+      mgmt_ipv4: 172.20.20.21
+      binds:
+        - setup_ubuntu.sh:/tmp/setup.sh
+      exec:
+        - bash /tmp/setup.sh
+        - ip addr add dev eth1 10.2.2.21/24
+        - ip route add 10.2.0.0/16 via 10.2.2.1
+        - echo 1 > /proc/sys/net/ipv4/ip_forward
+#      sysctls:
+#        net.ipv4.ip_forward: 1
+
+    alpine:
+      kind: linux
+      image: alpine:latest
+      memory: 256MB
+      cpu: 0.5
+      mgmt_ipv4: 172.20.20.31
+      binds:
+        - setup_alpine.sh:/tmp/setup.sh
+      exec:
+        - sh /tmp/setup.sh
+        - ip addr add dev eth1 10.2.3.31/24
+        - ip route add 10.2.0.0/16 via 10.2.3.1
+
+    cloudguard_mgmtgw:
+      kind: checkpoint_cloudguard
+      image: ghcr.io/antrah/cp_cloudguard_mgmt:R81.10
+      memory: 16GB # 12GB OK
+      cpu: 6
+      ports:
+        - 19009:19009
+        - 18190:18190
+        - 18264:18264
+      mgmt_ipv4: 172.20.20.10
+      mgmt_ipv6: 2001:172:20:20::10
+      # run setup_mgmtgw.sh for initial settings
+      # eth1: 10.2.2.1 to ubuntu
+      # eth2: 10.2.10.10 to gw1
+      binds:
+        - setup_mgmtgw.sh:/tmp/setup.sh
+      exec:
+        - sh /tmp/setup.sh
+
+    cloudguard_gw1:
+      kind: checkpoint_cloudguard
+      image: ghcr.io/antrah/cp_cloudguard_mgmt:R81.10
+#      image: ghcr.io/antrah/cp_cloudguard_gw:R81.10 # blink
+      memory: 6GB
+      cpu: 4
+      mgmt_ipv4: 172.20.20.11
+      mgmt_ipv6: 2001:172:20:20::11
+      # run setup_gw.sh for initial settings
+      # eth1: 10.2.10.11 to mgmtgw
+      # eth2: 10.2.3.1 to alpine
+      binds:
+        - setup_gw1.sh:/tmp/setup.sh
+      exec:
+        - sh /tmp/setup.sh
+
+
+  links:
+    - endpoints: ["ubuntu:eth1", "cloudguard_mgmtgw:eth1"]
+    - endpoints: ["cloudguard_mgmtgw:eth2", "cloudguard_gw1:eth1"]
+    - endpoints: ["alpine:eth1", "cloudguard_gw1:eth2"]
